@@ -1,10 +1,18 @@
 // read and set any environment variables with the dotenv package
 require("dotenv").config();
 
+// read/write files
+var fs = require("fs");
+// for debugging console.log
+const util = require("util");
+
+// APIs
 // axios
 var axios = require("axios");
 // moment
 var moment = require("moment");
+// Spotify
+var Spotify = require("node-spotify-api");
 
 // import key for spotify
 var keys = require("./key.js");
@@ -43,6 +51,29 @@ switch (search){
         console.log("Searching Spotify");
         // Create spotify obj
         var spotify = new Spotify(keys.spotify);
+
+        if (!term) {
+            term = "'The Sign' Ace of Base";
+        }
+
+        spotify.search({type: 'track', query: term}).then(function(response){
+            // console.log(util.inspect(response, false, null, true));
+            // items is an array
+            var jsonData = response.tracks.items;
+
+            for (var i = 0; i < jsonData.length; i++) {
+                // Display the artist
+                console.log("Artist(s):", jsonData[i].artists[0].name);
+                // Display the track name
+                console.log("Track Name:", jsonData[i].name);
+                // Preview link
+                console.log("Preview:", jsonData[i].preview_url);
+                
+                console.log("Album:", jsonData[i].album.name);
+                // divider
+                console.log("------------------------------------");
+            }            
+        });
 
         break;
 
