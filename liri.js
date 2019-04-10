@@ -22,17 +22,17 @@ var search = process.argv[2];
 // Get the thing they user is searching for
 var term = process.argv.slice(3).join(" ");
 
-switch (search){
+switch (search) {
     case "concert-this":
         console.log("Searching the Bands in Town Artist Events API");
         var URL = "https://rest.bandsintown.com/artists/" + term + "/events?app_id=codingbootcamp"
 
-        axios.get(URL).then(function(response){
+        axios.get(URL).then(function (response) {
             // response.data is an array!
             // console.log(response.data);
             var jsonData = response.data;
 
-            for (var i = 0; i < jsonData.length; i++){
+            for (var i = 0; i < jsonData.length; i++) {
                 // Print venue name
                 console.log("Venue", jsonData[i].venue.name);
                 // Print venue location
@@ -56,7 +56,7 @@ switch (search){
             term = "'The Sign' Ace of Base";
         }
 
-        spotify.search({type: 'track', query: term}).then(function(response){
+        spotify.search({ type: 'track', query: term }).then(function (response) {
             // console.log(util.inspect(response, false, null, true));
             // items is an array
             var jsonData = response.tracks.items;
@@ -68,17 +68,51 @@ switch (search){
                 console.log("Track Name:", jsonData[i].name);
                 // Preview link
                 console.log("Preview:", jsonData[i].preview_url);
-                
+
                 console.log("Album:", jsonData[i].album.name);
                 // divider
                 console.log("------------------------------------");
-            }            
+            }
         });
 
         break;
 
     case "movie-this":
         console.log("Searching OMDB for movie");
+
+        if (!term) {
+            term = "Mr. Nobody";
+        }
+
+        var URL = "http://www.omdbapi.com/?apikey=trilogy&t=" + term;
+
+        axios.get(URL).then(function (response) {
+
+            // console.log(response);
+            var jsonData = response.data;
+
+
+            // Print Movie title
+            console.log("Title:", jsonData.Title);
+            // Print Year movie was released
+            console.log("Year of Release:", jsonData.Year);
+            // IMDB Rating
+            console.log("IMDB Rating:", jsonData.Ratings[0].Value);
+            // Rotten tommato rating
+            console.log("Rotten Tomatoes Rating:", jsonData.Ratings[1].Value);
+            // Country of origin
+            console.log("Country:", jsonData.Country);
+            // Language
+            console.log("Languages:", jsonData.Language);
+            // Movie plot
+            console.log("Plot:", jsonData.Plot);
+            // Actors
+            console.log("Actors:", jsonData.Actors);
+            // A divider
+            console.log("------------------------------------");
+
+
+        });
 
         break;
 
