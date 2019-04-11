@@ -22,6 +22,8 @@ var search = process.argv[2];
 // Get the thing they user is searching for
 var term = process.argv.slice(3).join(" ");
 
+var divider = "----------------------------------------------\n";
+
 function liriMain(search, term) {
     switch (search) {
         case "concert-this":
@@ -34,14 +36,21 @@ function liriMain(search, term) {
                 var jsonData = response.data;
 
                 for (var i = 0; i < jsonData.length; i++) {
-                    // Print venue name
-                    console.log("Venue", jsonData[i].venue.name);
-                    // Print venue location
-                    console.log("Venue location: %s, %s", jsonData[i].venue.city, jsonData[i].venue.country);
-                    // Use moment to formate the date as MM/DD/YYY and print it)
-                    console.log("Date:", moment(jsonData[i].datetime).format('L'));
-                    // A divider
-                    console.log("------------------------------------");
+                    
+                    var result = [
+                        "Bands in Town search result:",
+                        "Venue: " + jsonData[i].venue.name,
+                        "Venue Location: " + jsonData[i].venue.city + ", " + jsonData[i].venue.country,
+                        "Date: " + moment(jsonData[i].datetime).format('L'),
+                        divider
+                    ];
+
+                    // Write results to log file
+                    fs.appendFileSync('./log.txt', result.join('\n'), 'utf-8');
+
+                    // Print results to console
+                    console.log(result.join('\n'));
+
                 }
 
             });
@@ -64,16 +73,22 @@ function liriMain(search, term) {
                 var jsonData = response.tracks.items;
 
                 for (var i = 0; i < jsonData.length; i++) {
-                    // Display the artist
-                    console.log("Artist(s):", jsonData[i].artists[0].name);
-                    // Display the track name
-                    console.log("Track Name:", jsonData[i].name);
-                    // Preview link
-                    console.log("Preview:", jsonData[i].preview_url);
 
-                    console.log("Album:", jsonData[i].album.name);
-                    // divider
-                    console.log("------------------------------------");
+                    var result = [
+                        "Spotify search result:",
+                        "Artist(s): " + jsonData[i].artists[0].name,
+                        "Track Name: " + jsonData[i].name,
+                        "Preview link: " + jsonData[i].preview_url,
+                        "Alblum: " + jsonData[i].album.name,
+                        divider
+                    ];
+
+                    // Write results to log file
+                    fs.appendFileSync('./log.txt', result.join('\n'), 'utf-8');
+
+                    // Print results to console
+                    console.log(result.join('\n'));
+
                 }
             });
 
@@ -94,26 +109,26 @@ function liriMain(search, term) {
                 // console.log(response);
                 var jsonData = response.data;
 
+                var result = [
+                    "Movie search result:",
+                    "Title: " + jsonData.Title,
+                    "Year of Release: " + jsonData.Year,
+                    "IMDB Rating: " + jsonData.Ratings[0].Value,
+                    "Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value,
+                    "Country: " + jsonData.Country,
+                    "Languages: " + jsonData.Language,
+                    "Plot: " + jsonData.Plot,
+                    "Actors: " + jsonData.Actors,
+                    divider
+                ];
 
-                // Print Movie title
-                console.log("Title:", jsonData.Title);
-                // Print Year movie was released
-                console.log("Year of Release:", jsonData.Year);
-                // IMDB Rating
-                console.log("IMDB Rating:", jsonData.Ratings[0].Value);
-                // Rotten tommato rating
-                console.log("Rotten Tomatoes Rating:", jsonData.Ratings[1].Value);
-                // Country of origin
-                console.log("Country:", jsonData.Country);
-                // Language
-                console.log("Languages:", jsonData.Language);
-                // Movie plot
-                console.log("Plot:", jsonData.Plot);
-                // Actors
-                console.log("Actors:", jsonData.Actors);
-                // A divider
-                console.log("------------------------------------");
+                // Write results to log file
+                fs.appendFileSync('./log.txt', result.join('\n'), 'utf-8');
 
+                // Print results to console
+                for (var i = 0; i < result.length; i++) {
+                    console.log(result[i]);
+                }
 
             });
 
@@ -133,13 +148,13 @@ function liriMain(search, term) {
 
                 // We expect the text to be search type and search term.
                 // If not a valid search type, default case should be called
-                for (var i = 0; i < output.length; i++){
+                for (var i = 0; i < output.length; i++) {
                     // Each element of the output array will be search type, search term.
                     // Split each element on the , and store that in a temp command to execute array
                     var command = output[i].split(",");
 
                     // If there is a blank line in the text file, skip it
-                    if (command[0].length == 0 || command[1].length == undefined){
+                    if (command[0].length == 0 || command[1].length == undefined) {
                         continue;
                     }
 
@@ -147,16 +162,16 @@ function liriMain(search, term) {
                     search = command[0].toString().trim();
                     // Second element on will be the search term. Turn element 2+ to a string and trim.
                     term = command.slice(1).join(" ").toString().trim();
-                
+
                     // Please don't break me. aka, nope on out of an infite loop
-                    if (search == "do-what-it-says"){
+                    if (search == "do-what-it-says") {
                         continue;
                     }
                     liriMain(search, term);
                     // console.log("search =%s, term =%s", search, term);
                 }
-              
-                
+
+
             });
             break;
 
