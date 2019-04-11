@@ -152,8 +152,8 @@ function liriMain(search, term) {
                     if (search == "do-what-it-says"){
                         continue;
                     }
-                    // liriMain(search, term);
-                    console.log("search =%s, term =%s", search, term);
+                    liriMain(search, term);
+                    // console.log("search =%s, term =%s", search, term);
                 }
               
                 
