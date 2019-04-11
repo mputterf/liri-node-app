@@ -128,20 +128,35 @@ function liriMain(search, term) {
                     return console.log(err);
                 }
 
-                // Break the string down by comma separation and store the contents into the output array.
-                var output = data.split(",");
+                // Break the string down by new line separation and store the contents into the output array.
+                var output = data.split("\n");
 
                 // We expect the text to be search type and search term.
                 // If not a valid search type, default case should be called
-                search = output[0].trim();
-                term = output[1].trim();
+                for (var i = 0; i < output.length; i++){
+                    // Each element of the output array will be search type, search term.
+                    // Split each element on the , and store that in a temp command to execute array
+                    var command = output[i].split(",");
 
-                // Please don't break me. aka, nope on out of an infite loop
-                if (search == "do-what-it-says"){
-                    return console.log("Using 'do-what-it-says would make an infinite loop. Quitting.");
+                    // If there is a blank line in the text file, skip it
+                    if (command[0].length == 0 || command[1].length == undefined){
+                        continue;
+                    }
+
+                    // Search type will always be one word and the first element in the command array. Turn it into a string so we can trim.
+                    search = command[0].toString().trim();
+                    // Second element on will be the search term. Turn element 2+ to a string and trim.
+                    term = command.slice(1).join(" ").toString().trim();
+                
+                    // Please don't break me. aka, nope on out of an infite loop
+                    if (search == "do-what-it-says"){
+                        continue;
+                    }
+                    // liriMain(search, term);
+                    console.log("search =%s, term =%s", search, term);
                 }
-                liriMain(search, term);
-                // console.log("search =%s, term =%s", search, term);
+              
+                
             });
             break;
 
