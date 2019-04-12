@@ -15,6 +15,16 @@ $ cd liri-node-app
 $ npm install
 ```
 
+Next, create a file called `.env` inside the `liri-node-app` directory.  
+Inside the file, you will put your Spotify keys like so:
+```
+# Spotify API keys
+
+SPOTIFY_ID=your-spotify-id
+SPOTIFY_SECRET=your-spotify-secret
+
+```
+
 ## Usage
 ```
 $ node liri <concert-this/spotify-this-song/movie-this/do-what-it-says> <search terms>
